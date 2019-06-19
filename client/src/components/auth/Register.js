@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
+//1. Brought in connect so we could work with Redux
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+//2. Also brought in the setAlert action
+import { setAlert } from '../../actions/alert';
+import PropTypes from 'prop-types';
 
-const Register = () => {
+//destructure setAlert from props
+//4. destructered setAlert here, pulled it out of the props
+const Register = ({ setAlert }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -21,7 +28,10 @@ const Register = () => {
   const onSubmit = async e => {
     e.preventDefault();
     if (password !== password2) {
-      console.log('Passwords do not match');
+      //passes this in as a message to our actions, generate an ID, and dispatch setAlert with that message, alertType and ID
+      //we put danger because of CSS alert-danger
+      //5. we called setAlert when the passwords don't match (setting the message and alert type) -Go to actions/alert
+      setAlert('Passwords do not match', 'danger');
     } else {
       console.log('SUCCESS');
     }
@@ -89,4 +99,12 @@ const Register = () => {
   );
 };
 
-export default Register;
+Register.propTypes = {
+  setAlert: PropTypes.func.isRequired
+};
+
+export default connect(
+  null,
+  { setAlert }
+)(Register);
+//3. add setAlert action in order to use it and then it's available within props
