@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 //1. Brought in connect so we could work with Redux
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 //2. Also brought in the setAlert action
 import { setAlert } from '../../actions/alert';
+import { register } from '../../actions/auth';
 import PropTypes from 'prop-types';
 
 //destructure setAlert from props
 //4. destructered setAlert here, pulled it out of the props
-const Register = ({ setAlert }) => {
+const Register = ({ setAlert, register, isAuthenticated }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -33,9 +34,14 @@ const Register = ({ setAlert }) => {
       //5. we called setAlert when the passwords don't match (setting the message and alert type) -Go to actions/alert
       setAlert('Passwords do not match', 'danger');
     } else {
-      console.log('SUCCESS');
+      register({ name, email, password });
     }
   };
+
+  //Redirect if registered
+  if (isAuthenticated) {
+    return <Redirect to='/dashboard' />;
+  }
 
   return (
     <>
@@ -52,7 +58,6 @@ const Register = ({ setAlert }) => {
               name='name'
               value={name}
               onChange={e => onChange(e)}
-              required
             />
           </div>
           <div className='form-group'>
@@ -62,7 +67,6 @@ const Register = ({ setAlert }) => {
               name='email'
               value={email}
               onChange={e => onChange(e)}
-              required
             />
             <small className='form-text'>
               This site uses Gravatar so if you want a profile image, use a
@@ -74,7 +78,6 @@ const Register = ({ setAlert }) => {
               type='password'
               placeholder='Password'
               name='password'
-              minLength='6'
               value={password}
               onChange={e => onChange(e)}
             />
@@ -84,7 +87,6 @@ const Register = ({ setAlert }) => {
               type='password'
               placeholder='Confirm Password'
               name='password2'
-              minLength='6'
               value={password2}
               onChange={e => onChange(e)}
             />
@@ -100,11 +102,17 @@ const Register = ({ setAlert }) => {
 };
 
 Register.propTypes = {
-  setAlert: PropTypes.func.isRequired
+  setAlert: PropTypes.func.isRequired,
+  register: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool
 };
 
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
 export default connect(
-  null,
-  { setAlert }
+  mapStateToProps,
+  { setAlert, register }
 )(Register);
 //3. add setAlert action in order to use it and then it's available within props
