@@ -45,7 +45,7 @@ const EditProfile = ({
       youtube: loading || !profile.social ? '' : profile.social.youtube,
       instagram: loading || !profile.social ? '' : profile.social.instagram
     });
-  }, [loading]);
+  }, [loading, getCurrentProfile]);
 
   const {
     company,
@@ -243,7 +243,7 @@ const EditProfile = ({
 };
 
 EditProfile.propTypes = {
-  editProfile: PropTypes.func.isRequired,
+  editProfile: PropTypes.func,
   getCurrentProfile: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired
 };
