@@ -81,7 +81,7 @@ router.post(
         payload,
         config.get('jwtSecret'),
         //before deployment change to 3600 (which is an hour) - When token expires
-        { expiresIn: 360000 },
+        { expiresIn: 3600 },
         (err, token) => {
           if (err) throw err;
           //could send user ID if we wanted
